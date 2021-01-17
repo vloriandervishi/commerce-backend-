@@ -43,6 +43,10 @@ router.post("/", (req, res) => {
   // create a new category
   Category.create({
     category_name: req.body.category_name,
+  }).then(createThis=>{
+    res.json({message: "Created Successfully",createThis});
+  }).catch(err=>{
+   res.status(500).json({message:"Server Error "});
   });
 });
 
@@ -50,7 +54,7 @@ router.put("/:id", (req, res) => {
   // update a category by its `id` value
   Category.update(
     {
-      category_name: req.category_name,
+      category_name: req.body.category_name,
     },
     {
       where: {
@@ -81,7 +85,9 @@ router.delete("/:id", (req, res) => {
     .then((deleteId) => {
       if (!deleteId) {
         res.status(404).json({ message: "No category found with this id" });
+        return;
       }
+      res.json({message:"Successfully Delted this id",deleteId});
     })
     .catch((error) => {
       console.log(error);

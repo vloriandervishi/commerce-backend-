@@ -13,7 +13,7 @@ router.get("/", (req, res) => {
     },
   })
     .then((status) => {
-      res.json(status);
+      res.json({message: "Successfully found ",status});
     })
     .catch((error) => {
       console.log(error);
@@ -60,16 +60,20 @@ router.put("/:id", (req, res) => {
   // update a tag's name by its `id` value
   Tag.update(
     {
-      tag_name: req.params.tag_name,
+      tag_name: req.body.tag_name,
     },
     {
       where: {
         id: req.params.id,
-      },
+      }
     }
   )
-    .then((status) => {
-      res.json(status);
+    .then((findTagID) => {
+      if (!findTagID) {
+        res.status(404).json({ message: 'No Tag found with that ID.' });
+        return;
+      }
+      res.json({message: "Successfully, Updated ",findTagID});
     })
     .catch((error) => {
       console.log(error);
@@ -87,8 +91,9 @@ router.delete("/:id", (req, res) => {
     .then((findId) => {
       if(!findId){
         res.json(404).json({message:"id not found!"})
+       return;
       }
-      res.json(status);
+      res.json({message:"Successfully Deleted",findId});
     })
     .catch((error) => {
       console.log(error);
